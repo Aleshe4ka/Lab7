@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.topic2.android.notes.theme.NotesTheme
@@ -39,5 +40,33 @@ private fun AppDrawerHeader() {
 fun AppDrawerHeaderPreview(){
     NotesTheme {
         AppDrawerHeader()
+    }
+}
+
+@Composable
+private fun ScreenNavigationButton(
+    icon: ImageVector,
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val colors = MaterialTheme.colors
+
+    val imageAlpha = if (isSelected) {
+        1f
+    } else {
+        0.6f
+    }
+
+    val textColor = if (isSelected) {
+        colors.primary
+    } else {
+        colors.onSurface.copy(alpha = 0.6f)
+    }
+
+    val backgroundColor = if (isSelected){
+        colors.primary.copy(alpha = 0.12f)
+    } else {
+        colors.surface
     }
 }
