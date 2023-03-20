@@ -5,10 +5,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.topic2.android.notes.screens.NotesScreen
 import com.topic2.android.notes.theme.NotesTheme
 import com.topic2.android.notes.viewmodel.MainViewModel
 import com.topic2.android.notes.viewmodel.MainViewModelFactory
-import ui.components.screens.NoteScreen
 
 /**
  * Main activity приложения.
@@ -29,6 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     setContent {
       NotesTheme {
-      NoteScreen(viewModel = viewModel)
+      NotesScreen(viewModel = viewModel)
     }
   }}}
