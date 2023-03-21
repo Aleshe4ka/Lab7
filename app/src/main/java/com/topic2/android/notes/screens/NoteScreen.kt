@@ -17,30 +17,41 @@ import com.topic2.android.notes.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import ui.components.AppDrawer
 import ui.components.Note
-import ui.components.TopAppBar
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun NotesScreen(
-    viewModel: MainViewModel
-) {
+fun NotesScreen(viewModel: MainViewModel) {
     val notes: List<NoteModel> by viewModel
         .notesNotInTrash
         .observeAsState(listOf())
-
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
 
-    Scaffold(topBar = {
-        TopAppBar(title = "Notes",
-            icon = Icons.Filled.List,
-            onIconClick = {
-                coroutineScope.launch{
-                    scaffoldState.drawerState.open()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Notes",
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.List,
+                            contentDescription = "Drawer Button"
+                        )
+                    }
                 }
-            }
-        )
-    },
+            )
+        },
         scaffoldState = scaffoldState,
         drawerContent = {
             AppDrawer(
@@ -66,11 +77,11 @@ fun NotesScreen(
             )
         },
         content = {
-            if (notes.isNotEmpty()) {
+            if (notes.isNotEmpty()){
                 NotesList(
-                    notes = notes, onNoteCheckedChange = {
-                        viewModel.onNoteCheckedChange(it)
-                    },
+                    notes = notes,
+                    onNoteCheckedChange = {
+                        viewModel.onNoteCheckedChange(it) },
                     onNoteClick = { viewModel.onNoteClick(it) }
                 )
             }
