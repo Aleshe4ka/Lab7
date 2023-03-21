@@ -2,15 +2,20 @@ package com.topic2.android.notes.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
 import com.topic2.android.notes.domain.model.NoteModel
+import com.topic2.android.notes.routing.Screen
 import com.topic2.android.notes.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
+import ui.components.AppDrawer
 import ui.components.Note
 import ui.components.TopAppBar
 
@@ -23,12 +28,43 @@ fun NotesScreen(
         .notesNotInTrash
         .observeAsState(listOf())
 
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(topBar = {
         TopAppBar(title = "Notes",
             icon = Icons.Filled.List,
-            onIconClick = {}
+            onIconClick = {
+                coroutineScope.launch{
+                    scaffoldState.drawerState.open()
+                }
+            }
         )
     },
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            AppDrawer(
+                currentScreen = Screen.Notes,
+                closeDrawerAction = {
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
+                    }
+                }
+            )
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { viewModel.onCreateNewNoteClick() },
+                contentColor = MaterialTheme.colors.background,
+                content = {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add Note Button"
+                    )
+                }
+            )
+        },
         content = {
             if (notes.isNotEmpty()) {
                 NotesList(
@@ -73,3 +109,4 @@ private fun NotesListPreview(){
         onNoteClick = {}
     )
 }
+
